@@ -1,15 +1,3 @@
-CREATE TABLE calendar(
-  id INT NOT NULL,
-  listing_id INT NOT NULL,
-  available BOOLEAN NOT NULL
-  price SMALLINT NOT NULL,
-  adjusted_price SMALLINT NOT NULL,
-  minimum_nights SMALLINT NOT NULL,
-  maximum_nights SMALLINT NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (listing_id) REFERENCES listing (id)
-);
-
 CREATE TABLE listing(
   id INT NOT NULL,
   url VARCHAR NULL,
@@ -101,7 +89,7 @@ CREATE TABLE host(
   listing_id SMALLINT NOT NULL,
   url VARCHAR NULL,
   name VARCHAR NOT NULL,
-  since DATE NOT NULL
+  since DATE NOT NULL,
   city VARCHAR NULL,
   neighborhood VARCHAR NULL,
   country VARCHAR NULL,
@@ -119,5 +107,18 @@ CREATE TABLE host(
   has_profile_pic BOOLEAN NULL,
   identity_verified BOOLEAN NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (listing_id) REFERENCES listing(id)
-)
+  FOREIGN KEY (listing_id) REFERENCES listing (id)
+);
+
+CREATE TABLE calendar(
+  id INT NOT NULL,
+  listing_id INT NOT NULL,
+  available BOOLEAN NOT NULL,
+  price SMALLINT NOT NULL,
+  adjusted_price SMALLINT NOT NULL,
+  minimum_nights SMALLINT NOT NULL,
+  maximum_nights SMALLINT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (listing_id) REFERENCES listing (id)
+);
+
