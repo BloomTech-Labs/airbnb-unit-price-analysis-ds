@@ -55,7 +55,6 @@ def get_listing(id):
 def key_value_query(id):
     listings = get_listing(id)
     cols = get_cols()
-    json = {}
     k=0
     for listing, col in zip(listings, cols):
         temp = {}
