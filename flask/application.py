@@ -24,6 +24,7 @@ def data():
     return json.dumps(data,use_decimal=True)
 
 
+<<<<<<< HEAD
 class dbConnector():
     """Class that connects to database"""
     def __init__(self):
@@ -95,6 +96,53 @@ class dbConnector():
                 i+=1
                 lists.append(temp)
         return lists
+=======
+def open_connection():
+    connection = psycopg2.connect(dbname=DB_NAME, 
+                            user=DB_USERNAME, 
+                            password=DB_PASSWORD, 
+                            host=DB_HOST,
+                            port=5432)
+    cursor = connection.cursor()
+    return cursor
+
+
+def get_cols():
+    sql = '''SELECT column_name 
+             FROM information_schema.columns 
+             WHERE table_name = 'listing' '''
+
+    cursor = open_connection()
+    cursor.execute(sql)
+    cols = cursor.fetchall()
+    cursor.close()
+    return cols
+
+
+def get_listing(id):
+    sql = f"SELECT * FROM listing WHERE listing.id = {id}"
+    cursor = open_connection()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cursor.close()
+    return data
+
+
+def key_value_query(id):
+    listings = get_listing(id)
+    cols = get_cols()
+    k=0
+    for listing, col in zip(listings, cols):
+        temp = {}
+        lists = []
+        i=0
+        while i < len(listing):
+            temp[cols[i][0]] = listing[i]
+            i+=1
+            lists.append(temp)
+        k+=1
+    return lists
+>>>>>>> 2e9b447cf8156f3080c6d4581e22926f591b9a30
 
 
 if __name__ == '__main__':
