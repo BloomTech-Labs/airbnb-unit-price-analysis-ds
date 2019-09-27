@@ -128,6 +128,11 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Backend Documentation](_link to your backend readme here_) for details on the backend of our project.
+# API Guide
 
-See [Front End Documentation](_link to your front end readme here_) for details on the front end of our project.
+This is a guide for Airbnb's web team to access the database. Please follow the routes below.
+
+## Routes
+|  Route |  Recieves | Returns  |
+|---|---|---|
+|  /data | listing_id  |  list[json] |
