@@ -1,12 +1,13 @@
-from flask import Flask, request, jsonify
-import psycopg2
 import os
-from dotenv import load_dotenv, find_dotenv
+import psycopg2
 import simplejson as json
+from flask import Flask, request, jsonify
+from dotenv import load_dotenv, find_dotenv
 
-application = app = Flask(__name__)
 
-load_dotenv()
+application = app = Flask(__name__) #application name for AWS beanstalk
+
+load_dotenv() #load database credentials
 DB_NAME=os.getenv("DB_NAME")
 DB_USERNAME=os.getenv("DB_USERNAME")
 DB_PASSWORD=os.getenv("DB_PASSWORD")
@@ -24,7 +25,6 @@ def data():
     return json.dumps(data,use_decimal=True)
 
 
-<<<<<<< HEAD
 class dbConnector():
     """Class that connects to database"""
     def __init__(self):
@@ -96,53 +96,6 @@ class dbConnector():
                 i+=1
                 lists.append(temp)
         return lists
-=======
-def open_connection():
-    connection = psycopg2.connect(dbname=DB_NAME, 
-                            user=DB_USERNAME, 
-                            password=DB_PASSWORD, 
-                            host=DB_HOST,
-                            port=5432)
-    cursor = connection.cursor()
-    return cursor
-
-
-def get_cols():
-    sql = '''SELECT column_name 
-             FROM information_schema.columns 
-             WHERE table_name = 'listing' '''
-
-    cursor = open_connection()
-    cursor.execute(sql)
-    cols = cursor.fetchall()
-    cursor.close()
-    return cols
-
-
-def get_listing(id):
-    sql = f"SELECT * FROM listing WHERE listing.id = {id}"
-    cursor = open_connection()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    cursor.close()
-    return data
-
-
-def key_value_query(id):
-    listings = get_listing(id)
-    cols = get_cols()
-    k=0
-    for listing, col in zip(listings, cols):
-        temp = {}
-        lists = []
-        i=0
-        while i < len(listing):
-            temp[cols[i][0]] = listing[i]
-            i+=1
-            lists.append(temp)
-        k+=1
-    return lists
->>>>>>> 2e9b447cf8156f3080c6d4581e22926f591b9a30
 
 
 if __name__ == '__main__':
