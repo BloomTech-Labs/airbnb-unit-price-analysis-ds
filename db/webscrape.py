@@ -35,10 +35,3 @@ for index, inner in enumerate(breakdown):
 for sublist in unique_cities:
     for item in sublist:
         flat_list.append(item)
-# seed db here
-
-
-# delete files
-
-
-print(set(flat_list))

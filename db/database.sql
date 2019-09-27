@@ -106,7 +106,7 @@ CREATE TABLE host(
   identity_verified BOOLEAN NULL);
 
 CREATE TABLE calendar(
-  id INT NOT NULL,
+  id SERIAL NOT NULL,
   listing_id INT NOT NULL,
   available BOOLEAN NOT NULL,
   date DATE NULL,
