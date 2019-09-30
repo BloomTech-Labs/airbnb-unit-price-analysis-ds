@@ -1,6 +1,7 @@
 import os
 import psycopg2
 import simplejson as json
+import numpy as np
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv, find_dotenv
 
@@ -23,6 +24,18 @@ def data():
     db.set_id(id)
     data = db.get_listing()
     return json.dumps(data,use_decimal=True)
+
+
+@application.route('/preds')
+def preds():
+    """Retrieve all listings associated with the passed id and returns predicted price"""
+    id = request.args.get('id')
+    db = dbConnector()
+    db.set_id(id)
+    data = db.get_listing()
+    zipcode = data[0]['zipcode']
+    preds = db.predictions(zipcode)
+    return json.dumps(preds, use_decimal=True)
 
 
 class dbConnector():
@@ -51,7 +64,7 @@ class dbConnector():
         sql = f"SELECT * FROM listing WHERE listing.id = {self.id}"
         query = self._fetch_query(sql)
         cols = self._get_cols('listing')
-        data =self.key_value_query(query, cols)
+        data = self.key_value_query(query, cols)
         return data
 
 
@@ -96,6 +109,15 @@ class dbConnector():
                 i+=1
                 lists.append(temp)
         return lists
+
+
+    def predictions(self, zipcode):
+        cursor = self.open_connection()
+        cursor.execute(f"""SELECT price FROM listing WHERE zipcode = '{zipcode}' """)
+        data = [int(word[0]) for word in cursor.fetchall()]
+        preds = [np.percentile(data, x) for x in range(10, 110, 10)]
+
+        return preds
 
 
 if __name__ == '__main__':
