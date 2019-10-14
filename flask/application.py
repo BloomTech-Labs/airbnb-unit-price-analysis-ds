@@ -6,6 +6,46 @@ import pandas as pd
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv, find_dotenv
 
+'''@application.route('/percentiles')
+def percentiles(filter_):
+    db = dbConnector()
+    cursor = db.open_connection()
+    if filter_ == "z":
+        zipcode = request.args.get('zipcode')
+        data = [int(word[0]) for word in cursor.execute("""SELECT price FROM listing WHERE zipcode = {%s}""", [zipcode])]
+    elif filter_ == "p":
+        property_type = request.args.get('property_type')
+        data = [int(word[0]) for word in cursor.execute("""SELECT price FROM listing WHERE property_type = {%s}""", [property_type])]
+    elif filter_ == "zp":
+        zipcode = request.args.get('zipcode')
+        property_type = request.args.get('property_type')
+        data = [int(word[0]) for word in cursor.execute("""SELECT price FROM listing WHERE property_type = {%s} AND zipcode = {%s}""", [property_type, zipcode])]
+    percentiles = [np.percentile(data, x) for x in range(10, 110, 10)]
+    totals = []
+    for n, percent in enumerate(percentiles):
+        count = 0
+        if n == 0:
+            for d in data:
+                if d <= percent:
+                    count += 1
+                else:
+                    pass
+        elif n == 9:
+            for d in data:
+                if d >= percent:
+                    count += 1
+                else:
+                    pass
+        else:
+            for d in data:
+                if d >= percent and d < percentiles[n+1]:
+                    count += 1
+                else:
+                    pass
+        totals.append(count)
+        
+        
+    return percentiles, totals'''
 
 application = app = Flask(__name__) #application name for AWS beanstalk
 

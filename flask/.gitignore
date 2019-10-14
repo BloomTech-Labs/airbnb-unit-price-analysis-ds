@@ -5,4 +5,5 @@
 !.elasticbeanstalk/*.global.yml
 
 #env 
-.env
+*.env
+*.csv
