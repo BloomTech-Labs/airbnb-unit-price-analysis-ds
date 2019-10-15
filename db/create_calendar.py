@@ -572,10 +572,10 @@ while i < len(oct_list):
             cal[str(col)].fillna(0,inplace=True)
 
 
-    connection = psycopg2.connect(dbname="postgres", 
-                            user="ridley", 
-                            password="sAYD6HJETeGHy7a9", 
-                            host='airbnb.c38lxrcn63qf.us-west-1.rds.amazonaws.com',
+    connection = psycopg2.connect(dbname="", 
+                            user="", 
+                            password="", 
+                            host="",
                             port=5432)
     cursor=connection.cursor()
 
