@@ -106,7 +106,11 @@ CREATE TABLE host(
   identity_verified BOOLEAN NULL);
 
 CREATE TABLE calendar(
+<<<<<<< HEAD
   id INT NOT NULL,
+=======
+  id SERIAL NOT NULL,
+>>>>>>> routes
   listing_id INT NOT NULL,
   available BOOLEAN NOT NULL,
   date DATE NULL,

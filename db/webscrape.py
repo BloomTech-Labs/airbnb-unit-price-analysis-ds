@@ -35,6 +35,7 @@ for index, inner in enumerate(breakdown):
 for sublist in unique_cities:
     for item in sublist:
         flat_list.append(item)
+<<<<<<< HEAD
 # seed db here
 
 
@@ -42,3 +43,5 @@ for sublist in unique_cities:
 
 
 print(set(flat_list))
+=======
+>>>>>>> routes
