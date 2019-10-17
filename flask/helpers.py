@@ -16,6 +16,7 @@ DB_HOST=os.getenv("DB_HOST")
 class dbConnector():
     """Class that connects to database"""
     def __init__(self):
+        self.Helper = Helper()
         return
 
     def set_id(self, id:str):
@@ -39,7 +40,7 @@ class dbConnector():
         sql = f"SELECT * FROM listing WHERE listing.id = {self.id}"
         query = self._fetch_query(sql)
         cols = self._get_cols('listing')
-        data = self.key_value_query(query, cols)
+        data = self.Helper.key_value_query(query, cols)
         return data
 
 
@@ -48,7 +49,7 @@ class dbConnector():
         sql = f"SELECT * FROM calendar WHERE calendar.listing_id = {self.id}"
         query = self._fetch_query(sql)
         cols = self._get_cols('calendar')
-        data = self.key_value_query(query, cols)
+        data = self.Helper.key_value_query(query, cols)
         return data
 
 
@@ -89,7 +90,7 @@ class dbConnector():
                 LIMIT 1"""
         query = self._fetch_query(sql)
         cols = self._get_cols('listing')
-        data = self.key_value_query(query, cols)
+        data = self.Helper.key_value_query(query, cols)
         return data
 
 
@@ -99,7 +100,7 @@ class dbConnector():
         elif filter == "p":
             data = [int(word[0]) for word in self._fetch_query(f"""SELECT price FROM listing WHERE property_type = '{property_type}' """)]
         elif filter == "zp":
-            data = [int(word[0]) for word in self._fetch_query(f"""SELECT price FROM listing WHERE property_type = '{property_typeç}' AND zipcode = {zipcode}""")]
+            data = [int(word[0]) for word in self._fetch_query(f"""SELECT price FROM listing WHERE property_type = '{property_type}' AND zipcode = {zipcode}""")]
         return data
 
 
@@ -111,27 +112,18 @@ class dbConnector():
         data = cursor.fetchall()
         cursor.close()
         return data
+    
 
 
-    def key_value_query(self, query:tuple, cols:tuple) -> list:
-        """Returns key value pairs:
-        Returns - list of {Column Name : Value}"""
-        for listing, col in zip(query, cols):
-            temp = {}
-            lists = []
-            i=0
-            while i < len(listing):
-                temp[cols[i][0]] = listing[i]
-                i+=1
-                lists.append(temp)
-        return lists
-
+class Helper():
+    def __init__(self, *args, **kwargs):
+        return
+    
 
     def percents(self, listing_price: float, pricing: list):
         prices = [int(price[0]) for price in pricing]
         preds = [np.percentile(prices, x) for x in range(10, 110, 10)]
-        places = [num for num in range(10, 110, 10)]
-        percentiles = {p:perct for p, perct in zip(places, preds)}
+        places = [num for num in range(10, 100, 10)]
          # Find where listing lies in percentile range
         response = {}
         listing_percentile = np.percentile(places,listing_price)
@@ -139,8 +131,8 @@ class dbConnector():
         response.update({'listing_percentile':listing_percentile})
         return response
 
-    
-    def percentile_totals(self, percentiles,data):
+
+    def percentile_totals(self, percentiles, data):
         totals = []
         for n, percent in enumerate(percentiles):
             count = 0
@@ -166,11 +158,24 @@ class dbConnector():
         
         return totals
 
+    def key_value_query(self, query:tuple, cols:tuple) -> list:
+        """Returns key value pairs:
+        Returns - list of {Column Name : Value}"""
+        for listing, col in zip(query, cols):
+            temp = {}
+            lists = []
+            i=0
+            while i < len(listing):
+                temp[cols[i][0]] = listing[i]
+                i+=1
+                lists.append(temp)
+        return lists
+
+
     def amens(self, listing_amens: list, total_amens: list, price:float):
-        helper = Helper()
-        listing_amens = helper.json_to_list(listing_amens[0])
+        listing_amens = self.json_to_list(listing_amens[0])
         premium_amens = [word[1] for word in total_amens if word[0] > price]
-        premium_amens = helper.json_to_list(premium_amens)
+        premium_amens = self.json_to_list(premium_amens)
         higher_amens = []
         for amen in premium_amens:
             for a in amen:
@@ -183,13 +188,7 @@ class dbConnector():
                         pass
         json_amens = {'lacking_amenities':higher_amens}
         return json_amens
-        
 
-
-class Helper():
-    def __init__(self, *args, **kwargs):
-        return
-    
 
     def json_to_list(self, current_data):
         new = []
@@ -200,18 +199,3 @@ class Helper():
         return new
 
 
-    def unique_amenities(self, df, column):
-        amens = higher['amenities'].values
-        higher_amenities = json_to_list(higher['amenities'].values)
-        higher_amens = []
-        for amen in higher_amenities:
-            for a in amen:
-                if a in amenities:
-                    pass
-                else:
-                    if a not in higher_amens:
-                        higher_amens.append(a)
-                    else:
-                        pass
-        json_amens = {'lacking_amenities':higher_amens}
-        return json_amens
